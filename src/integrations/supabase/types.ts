@@ -14,7 +14,140 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      inventory_items: {
+        Row: {
+          analysis_id: string
+          average_stock: number
+          class: string | null
+          consignment_score: number | null
+          consignment_stock: string
+          created_at: string
+          criticality_agg: number | null
+          daily_usage: number
+          demand_agg: number | null
+          demand_fluctuation: string
+          fluctuation_score: number | null
+          fuzzy_class: string | null
+          fuzzy_topsis_score: number | null
+          id: string
+          item_number: number
+          lead_time: number
+          norm_cost: number | null
+          norm_lead_time: number | null
+          norm_stock: number | null
+          norm_usage: number | null
+          risk: string
+          risk_score: number | null
+          size_score: number | null
+          supply_agg: number | null
+          topsis_score: number | null
+          unit_cost: number
+          unit_size: string
+        }
+        Insert: {
+          analysis_id: string
+          average_stock: number
+          class?: string | null
+          consignment_score?: number | null
+          consignment_stock: string
+          created_at?: string
+          criticality_agg?: number | null
+          daily_usage: number
+          demand_agg?: number | null
+          demand_fluctuation: string
+          fluctuation_score?: number | null
+          fuzzy_class?: string | null
+          fuzzy_topsis_score?: number | null
+          id?: string
+          item_number: number
+          lead_time: number
+          norm_cost?: number | null
+          norm_lead_time?: number | null
+          norm_stock?: number | null
+          norm_usage?: number | null
+          risk: string
+          risk_score?: number | null
+          size_score?: number | null
+          supply_agg?: number | null
+          topsis_score?: number | null
+          unit_cost: number
+          unit_size: string
+        }
+        Update: {
+          analysis_id?: string
+          average_stock?: number
+          class?: string | null
+          consignment_score?: number | null
+          consignment_stock?: string
+          created_at?: string
+          criticality_agg?: number | null
+          daily_usage?: number
+          demand_agg?: number | null
+          demand_fluctuation?: string
+          fluctuation_score?: number | null
+          fuzzy_class?: string | null
+          fuzzy_topsis_score?: number | null
+          id?: string
+          item_number?: number
+          lead_time?: number
+          norm_cost?: number | null
+          norm_lead_time?: number | null
+          norm_stock?: number | null
+          norm_usage?: number | null
+          risk?: string
+          risk_score?: number | null
+          size_score?: number | null
+          supply_agg?: number | null
+          topsis_score?: number | null
+          unit_cost?: number
+          unit_size?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inventory_items_analysis_id_fkey"
+            columns: ["analysis_id"]
+            isOneToOne: false
+            referencedRelation: "mcdm_analyses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mcdm_analyses: {
+        Row: {
+          created_at: string
+          crisp_weights: Json | null
+          fuzzy_weights: Json | null
+          id: string
+          name: string
+          thresholds_a: number
+          thresholds_b: number
+          total_items: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          crisp_weights?: Json | null
+          fuzzy_weights?: Json | null
+          id?: string
+          name: string
+          thresholds_a?: number
+          thresholds_b?: number
+          total_items?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          crisp_weights?: Json | null
+          fuzzy_weights?: Json | null
+          id?: string
+          name?: string
+          thresholds_a?: number
+          thresholds_b?: number
+          total_items?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
