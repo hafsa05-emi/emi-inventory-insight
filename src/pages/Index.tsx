@@ -11,10 +11,14 @@ import {
   Upload,
   Percent,
   Award,
+  CloudUpload,
+  Loader2,
+  History,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
+import { Button } from "@/components/ui/button";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { CSVUploader } from "@/components/CSVUploader";
@@ -24,6 +28,7 @@ import { WeightsPieChart } from "@/components/WeightsPieChart";
 import { FuzzyCrispScatter } from "@/components/FuzzyCrispScatter";
 import { DetailedResultsTable } from "@/components/DetailedResultsTable";
 import { DataTable } from "@/components/DataTable";
+import { useMCDMBackend } from "@/hooks/useMCDMBackend";
 import {
   InventoryItem,
   ProcessedItem,
@@ -41,6 +46,9 @@ export default function Index() {
   const [rawData, setRawData] = useState<InventoryItem[]>(() => generateSampleData(700));
   const [thresholds, setThresholds] = useState({ A: 20, B: 50 });
   const [currentView, setCurrentView] = useState("crisp");
+
+  // Backend hook for cloud storage
+  const { isLoading, lastAnalysisId, savedAnalyses, analyzeData, listAnalyses } = useMCDMBackend();
 
   const { processedItems, crispWeights, fuzzyWeights } = useMemo(() => {
     return processInventoryData(rawData, thresholds);
@@ -73,6 +81,11 @@ export default function Index() {
   const handleThresholdBChange = useCallback((value: number[]) => {
     setThresholds((prev) => ({ ...prev, B: value[0] }));
   }, []);
+
+  // Save analysis to cloud
+  const handleSaveToCloud = useCallback(async () => {
+    await analyzeData(rawData, thresholds);
+  }, [rawData, thresholds, analyzeData]);
 
   const renderContent = () => {
     switch (currentView) {
@@ -563,10 +576,28 @@ export default function Index() {
                   Advanced MCDM Platform for Inventory Management
                 </p>
               </div>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <span className="px-2 py-1 rounded bg-primary/20 text-primary font-mono">
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-1 rounded bg-primary/20 text-primary font-mono text-xs">
                   {rawData.length} items
                 </span>
+                <Button
+                  size="sm"
+                  onClick={handleSaveToCloud}
+                  disabled={isLoading}
+                  className="gap-2"
+                >
+                  {isLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <CloudUpload className="h-4 w-4" />
+                  )}
+                  Save to Cloud
+                </Button>
+                {lastAnalysisId && (
+                  <span className="text-xs text-muted-foreground">
+                    Saved: {lastAnalysisId.slice(0, 8)}...
+                  </span>
+                )}
               </div>
             </div>
           </header>
